@@ -1,19 +1,46 @@
 document.addEventListener("click", clickHandlers);
 
 function clickHandlers(event) {
-  console.log(event.target);
   if (event.target.matches("#pull")) {
-    document.querySelector("body").classList.toggle("show-nav");
+    showMenu();
+    event.preventDefault();
+  }
+  if (event.target.matches(".content-video a")) {
+    videoSwitch(event);
+    event.preventDefault();
+  }
+  if (event.target.matches(".image-tn img")) {
+    runCarousel(event);
     event.preventDefault();
   }
 }
 
-// store the link plus the API key in a variable
+function runCarousel(event) {
+  const imageHref = event.target.getAttribute("src");
+  const titleText = event.target.title;
+  document.querySelector("figure img").setAttribute("src", imageHref);
+  document.querySelector("figcaption").innerText = titleText;
+}
+
+function showMenu() {
+  document.querySelector("body").classList.toggle("show-nav");
+}
+
+function videoSwitch(event) {
+  const iFrame = document.querySelector("iframe");
+  const videoLinks = document.querySelectorAll(".content-video a");
+  videoLinks.forEach((videoLink) => videoLink.classList.remove("active"));
+  event.target.classList.add("active");
+  const videoToPlay = event.target.getAttribute("href");
+  iFrame.setAttribute("src", videoToPlay);
+}
+
+//NYTIMES
 const key = "uQG4jhIEHKHKm0qMKGcTHqUgAolr1GM0";
 const API = `https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=${key}`;
 const storagePrefix = "nyt-autosave";
 
-console.log(API);
+// console.log(API);
 
 function getStories() {
   fetch(API)
